@@ -22749,12 +22749,14 @@
           var showOnPaths = ["/browse", "/entity"];
           createEffect(function () {
             var currentPath = location.pathname;
+            var root = document.getElementById("root");
             var matchesPartial = showOnPaths.some(function (path) {
               return currentPath.startsWith(path);
             });
             if (currentPath === "/") {
               matchesPartial = true;
             }
+            if (root) root.remove();
             setShowWidgets(matchesPartial);
           });
           var _createSignal49 = createSignal(),
@@ -24197,7 +24199,7 @@
         }
         var Entity = lazy(function () {
           return __vitePreload(function () {
-            return module.import('./entity-legacy-Ij7jNa6D.js');
+            return module.import('./entity-legacy-CDuwprmK.js');
           }, false ? __VITE_PRELOAD__ : void 0);
         });
         var urlParams = new URLSearchParams(window.location.search);
@@ -24274,4 +24276,4 @@
     };
   });
 })();
-//# sourceMappingURL=index-legacy-ZLnitxlX.js.map
+//# sourceMappingURL=index-legacy-DO5pTu07.js.map
