@@ -1,5 +1,5 @@
 {
-  "name": "solid-demo-app",
+  "name": "solid-gpu-acceleration",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -8,8 +8,8 @@
     "start": "vite --open --host --force",
     "start:prod": "vite --open --host --force --mode production",
     "build": "vite build --sourcemap=true",
-    "build:github": "vite build --sourcemap=false --base=/solid-demo-app/",
-    "build:github:dev": "NODE_ENV=development vite build --sourcemap=true --mode development --base=/solid-demo-app/",
+    "build:github": "vite build --sourcemap=false --base=/solid-gpu-acceleration/",
+    "build:github:dev": "NODE_ENV=development vite build --sourcemap=true --mode development --base=/solid-gpu-acceleration/",
     "build:analyze": "vite-bundle-visualizer",
     "deploy": "gh-pages -d dist",
     "preview": "vite preview --open --port 8080",
