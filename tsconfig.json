@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2019",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "types": ["vite/client"],
+    "noEmit": true,
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "paths": {
+      "theme": ["./node_modules/@lightningjs/l3-ui-theme-base"],
+      "@lightningjs/solid": ["./node_modules/@lightningtv/solid"]
+    }
+  }
+}
