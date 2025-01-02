@@ -58,12 +58,17 @@ const App = (props) => {
   const showOnPaths = ['/browse', '/entity']
   createEffect(() => {
     const currentPath = location.pathname
+    const root = document.getElementById('root')
     let matchesPartial = showOnPaths.some((path) =>
       currentPath.startsWith(path)
     )
+
     if (currentPath === '/') {
       matchesPartial = true
     }
+
+    if (root) root.remove()
+
     setShowWidgets(matchesPartial)
   })
 
