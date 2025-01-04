@@ -19,9 +19,9 @@
     "focusScale": 1.1
   },
   "color": {
-    "primary": "#00315c",
+    "primary": "#BE5504",
     "focus": "#bdbdbd",
-    "container": "#004882"
+    "container": "#ED7014"
   },
   "typography": {
     "display1": {
