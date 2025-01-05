@@ -31,7 +31,7 @@ function _get(path: string, params: RequestInit = {}) {
   }).then((r) => r.json())
 }
 
-function loadConfig() {
+async function loadConfig() {
   return _get('/configuration').then((data) => {
     tmdbConfig = data
     baseImageUrl = data.images?.secure_base_url
