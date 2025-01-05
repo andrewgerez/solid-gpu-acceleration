@@ -25,7 +25,7 @@ const NavButtonTextStyles = {
   },
 }
 
-function NavButton(props: NavButtonProps) {
+function NavButton(props: Readonly<NavButtonProps>) {
   return (
     <View {...props} forwardStates style={styles.NavButton}>
       <View y={-16}>
@@ -36,19 +36,19 @@ function NavButton(props: NavButtonProps) {
   )
 }
 
-export default function NavDrawer(props) {
+export default function NavDrawer(props: any) {
   let backdrop: ElementNode | undefined
   const navigate = useNavigate()
-  function onFocus(this: ElementNode) {
+  function onFocus(el: ElementNode) {
     backdrop!.states.add('$focus')
-    this.children.forEach((c) => c.states!.add('$active'))
-    this.children[this.selected || 0].setFocus()
+    el.children.forEach((c) => c.states.add('$active'))
+    el.children[el.selected ?? 0].setFocus()
   }
 
-  function onBlur(this: ElementNode) {
+  function onBlur(el: ElementNode) {
     backdrop!.states.remove('$focus')
-    this.selected = 0
-    this.children.forEach((c) => c.states!.remove('$active'))
+    el.selected = 0
+    el.children.forEach((c) => c.states.remove('$active'))
   }
 
   function handleNavigate(page: string) {
