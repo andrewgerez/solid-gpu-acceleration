@@ -1,22 +1,34 @@
-const API_BASE = import.meta.env.VITE_API_BASE
-const API_KEY_V4 = import.meta.env.VITE_API_KEY
-let tmdbConfig
-let baseImageUrl
+import { API_BASE, API_KEY_V4 } from "./constants"
+
+let tmdbConfig: any
+let baseImageUrl: string
+
 const basePosterSize = 'w185'
 
-
-const defaultFetchParams = {
+const defaultFetchParams: RequestInit = {
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + API_KEY_V4,
+    Authorization: `Bearer ${API_KEY_V4}`,
   },
 }
 
-export function getImageUrl(path: string, posterSize: string = basePosterSize) {
-  return baseImageUrl + posterSize + path
+/**
+ * Returns the URL for an image.
+ * @param path The path to the image.
+ * @param posterSize The size of the poster (default: 'w185').
+ * @returns The URL for the image.
+ */
+export function getImageUrl(path: string, posterSize: string = basePosterSize): string {
+  return `${baseImageUrl}${posterSize}${path}`
 }
 
-function get(path: string, params: RequestInit = {}) {
+/**
+ * Makes a GET request to the API.
+ * @param path The path to the API endpoint.
+ * @param params Optional request parameters.
+ * @returns The response data.
+ */
+function get(path: string, params: RequestInit = {}): Promise<any> {
   if (tmdbConfig) {
     return _get(path, params)
   } else {
@@ -24,14 +36,21 @@ function get(path: string, params: RequestInit = {}) {
   }
 }
 
-function _get(path: string, params: RequestInit = {}) {
-  return fetch(API_BASE + path, {
-    ...defaultFetchParams,
-    ...params,
-  }).then((r) => r.json())
+/**
+ * Makes a GET request to the API (internal).
+ * @param path The path to the API endpoint.
+ * @param params Optional request parameters.
+ * @returns The response data.
+ */
+function _get(path: string, params: RequestInit = {}): Promise<any> {
+  return fetch(`${API_BASE}${path}`, { ...defaultFetchParams, ...params }).then((r) => r.json())
 }
 
-async function loadConfig() {
+/**
+ * Loads the TMDB configuration.
+ * @returns The configuration data.
+ */
+async function loadConfig(): Promise<any> {
   return _get('/configuration').then((data) => {
     tmdbConfig = data
     baseImageUrl = data.images?.secure_base_url
@@ -39,6 +58,7 @@ async function loadConfig() {
   })
 }
 
+// Export the API
 export default {
   get,
   loadConfig,

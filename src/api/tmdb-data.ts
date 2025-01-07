@@ -2,39 +2,88 @@ import api from '.'
 import { convertItemsToTiles } from './formatters/item-formatter'
 import { createResource } from 'solid-js'
 
-const handleResults = (response) => {
-  return response.then(({ results }) => {
-    let filteredItems = results.filter((r) => !r.adult)
-    return convertItemsToTiles(filteredItems)
-  })
+const handleResults = async (response: Promise<any>) => {
+  const { results } = await response
+  return convertItemsToTiles(results.filter((r: any) => !r.adult))
 }
 
-
-const fetchPopular = (type) => {
-  return handleResults(api.get(`/${type}/popular`))
+const fetchPopular = async (type: string) => {
+  const data = await api.get(`/${type}/popular`)
+  return handleResults(data)
 }
 
-let genreListCache
-const fetchGenreMovies = (genres) => {
-  const genreList =
-    genreListCache || (genreListCache = api.get(`/genre/movie/list`))
+const genreListCache = api.get('/genre/movie/list')
+const fetchGenreMovies = async (genres: string | string[]) => {
   const targetGenre = Array.isArray(genres) ? genres : [genres]
-  return genreList.then(({ genres }) => {
-    let targetGenreIds: number[] = []
-    genres.forEach((item) => {
-      if (targetGenre.includes(item.name)) targetGenreIds.push(item.id)
-    })
-    return handleResults(
-      api.get(`/discover/movie?with_genres=${targetGenreIds.join()}`)
-    )
-  })
+  const genreList = await genreListCache
+  const targetGenreIds = genreList.genres
+    .filter((item: any) => targetGenre.includes(item.name))
+    .map((item: any) => item.id)
+  return handleResults(api.get(`/discover/movie?with_genres=${targetGenreIds.join()}`))
 }
 
 type RowItem = {
-    title: string
-    items: any
-    type: 'Poster' | 'Hero' | 'PosterTitle'
-    height: number
+  title: string
+  items: any
+  type: 'Poster' | 'Hero' | 'PosterTitle'
+  height: number
+}
+
+export function tmdbData() {
+  const rows: RowItem[] = []
+
+  const popularMovies = {
+    title: 'Popular Movies',
+    items: createResource(() => fetchPopular('movie'))[0],
+    type: 'Poster',
+    height: 328,
+  } as RowItem
+
+  const westernMovies = {
+    title: 'Best Western movies',
+    items: createResource(() => fetchGenreMovies('Western'))[0],
+    type: 'Hero',
+    height: 720,
+  } as RowItem
+
+  const comedyMovies = {
+    title: 'Best Comedy movies',
+    items: createResource(() => fetchGenreMovies('Comedy'))[0],
+    type: 'PosterTitle',
+    height: 400,
+  } as RowItem
+
+  const popularTVShows = {
+    title: 'Popular TV shows',
+    items: createResource(() => fetchPopular('tv'))[0],
+    type: 'PosterTitle',
+    height: 400,
+  } as RowItem
+
+  const heroRow = {
+    title: 'Best Adventure and Action movies',
+    items: createResource(() => fetchGenreMovies(['adventure', 'action']))[0],
+    type: 'Hero',
+    height: 720,
+  } as const
+
+  const documentaries = {
+    title: 'Best Documentaries',
+    items: createResource(() => fetchGenreMovies('Documentary'))[0],
+    type: 'PosterTitle',
+    height: 400,
+  } as RowItem
+
+  const westernMovies2 = {
+    title: 'Best Western movies 2',
+    items: createResource(() => fetchGenreMovies('Western'))[0],
+    type: 'PosterTitle',
+    height: 400,
+  } as RowItem
+
+  rows.push(popularMovies, westernMovies, comedyMovies, popularTVShows, heroRow, documentaries, westernMovies2)
+
+  return { rows }
 }
 
 export function destroyData() {
@@ -47,62 +96,5 @@ export function destroyData() {
 
   return {
     heroRow,
-  }
-}
-export function tmdbData() {
-  const rows: RowItem[] = []
-
-  rows.push({
-    title: 'Popular Movies',
-    items: createResource(() => fetchPopular('movie'))[0],
-    type: 'Poster',
-    height: 328,
-  })
-
-  rows.push({
-    title: 'Best Western movies',
-    items: createResource(() => fetchGenreMovies(['Western']))[0],
-    type: 'Hero',
-    height: 720,
-  })
-
-  rows.push({
-    title: 'Best Comedy movies',
-    items: createResource(() => fetchGenreMovies(['Comedy']))[0],
-    type: 'PosterTitle',
-    height: 400,
-  })
-
-  rows.push({
-    title: 'Popular TV shows',
-    items: createResource(() => fetchPopular('tv'))[0],
-    type: 'PosterTitle',
-    height: 400,
-  })
-
-  const heroRow = {
-    title: 'Best Adventure and Action movies',
-    items: createResource(() => fetchGenreMovies(['adventure', 'action']))[0],
-    type: 'Hero',
-    height: 720,
-  } as const
-  rows.push(heroRow)
-
-  rows.push({
-    title: 'Best Documentaries',
-    items: createResource(() => fetchGenreMovies('Documentary'))[0],
-    type: 'PosterTitle',
-    height: 400,
-  })
-
-  rows.push({
-    title: 'Best Western movies 2',
-    items: createResource(() => fetchGenreMovies('Western'))[0],
-    type: 'PosterTitle',
-    height: 400,
-  })
-
-  return {
-    rows
   }
 }

@@ -1,19 +1,5 @@
+import { truncateString } from '../../utils/string/truncate-string'
 import { getImageUrl } from '../index'
-
-function truncateString(str: string, maxLength: number): string {
-  if (str.length > maxLength) {
-    return str.substring(0, maxLength - 3) + '...'
-  }
-  return str
-}
-
-export function chunkArray(array: string[], size = 7) {
-  let result: string[][] = []
-  for (let i = 0, j = array.length; i < j; i += size) {
-    result.push(array.slice(i, i + size))
-  }
-  return result
-}
 
 export interface Tile {
   src: string

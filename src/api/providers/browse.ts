@@ -1,5 +1,6 @@
 import api from '..'
-import { convertItemsToTiles, chunkArray } from '../formatters/item-formatter'
+import { chunkArray } from '../../utils/array/chunk-array'
+import { convertItemsToTiles } from '../formatters/item-formatter'
 
 let cache = new Map()
 const leftoverTiles = new Map()
