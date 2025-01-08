@@ -69,9 +69,8 @@ const { render } = createRenderer()
 loadFonts(fonts)
 render(() => (
   <HashRouter root={(props) => <App {...props} />}>
-    <Route path='' component={Browse} preload={browsePreload} />
+    <Route path='' component={TMDB} preload={tmdbData} />
     <Route path='browse/:filter' component={Browse} preload={browsePreload} />
-    <Route path='tmdb' component={TMDB} preload={tmdbData} />
     <Route path='destroy' component={DestroyPage} preload={destroyData} />
     <Route path='entity/:type/:id' component={Entity} preload={entityPreload} />
     <Route path='*all' component={NotFound} />
