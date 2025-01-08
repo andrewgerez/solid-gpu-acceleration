@@ -2,14 +2,15 @@ import api from '.'
 import { convertItemsToTiles } from './formatters/item-formatter'
 import { createResource } from 'solid-js'
 
-const handleResults = async (response: Promise<any>) => {
+const handleResults = async (response: Promise<any>, type: string) => {
   const { results } = await response
-  return convertItemsToTiles(results.filter((r: any) => !r.adult))
+  const data = results.filter((r: any) => !r.adult)
+  return convertItemsToTiles(data, type)
 }
 
 const fetchPopular = async (type: string) => {
   const data = await api.get(`/${type}/popular`)
-  return handleResults(data)
+  return handleResults(data, type)
 }
 
 const genreListCache = api.get('/genre/movie/list')
@@ -19,7 +20,7 @@ const fetchGenreMovies = async (genres: string | string[]) => {
   const targetGenreIds = genreList.genres
     .filter((item: any) => targetGenre.includes(item.name))
     .map((item: any) => item.id)
-  return handleResults(api.get(`/discover/movie?with_genres=${targetGenreIds.join()}`))
+  return handleResults(api.get(`/discover/movie?with_genres=${targetGenreIds.join()}`), 'movie')
 }
 
 type RowItem = {

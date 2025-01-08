@@ -20,18 +20,18 @@ export interface Tile {
   }
 }
 
-export function convertItemsToTiles(items: any[] = []): Tile[] {
+export function convertItemsToTiles(items: any[] = [], type?: string): Tile[] {
   return items.map((item) => ({
     src: getImageUrl(item.poster_path || item.profile_path),
     tileSrc: getImageUrl(item.backdrop_path || item.profile_path, 'w300'),
     backdrop: getImageUrl(item.backdrop_path, 'w1280'),
-    href: `/entity/${item.media_type || 'people'}/${item.id}`,
+    href: `/entity/${item.media_type || type || 'people'}/${item.id}`,
     shortTitle: truncateString(item.title || item.name, 30),
     title: item.title || item.name,
     overview: item.overview,
     item,
     entityInfo: {
-      type: item.media_type || 'people',
+      type: item.media_type || type || 'people',
       id: item.id,
     },
     heroContent: {
