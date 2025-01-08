@@ -106,6 +106,15 @@ const Browse = (props) => {
   return (
     <Show when={provider().pages().length}>
       <ContentBlock y={360} x={162} content={heroContent()} />
+      <View
+        width={300}
+        height={150}
+        x={162}
+        y={80}
+        zIndex={105}
+      >
+        <View y={-60} src='./assets/logo.png' width={280} height={280} />
+      </View>
       <View clipping style={styles.itemsContainer}>
         <Column
           id='BrowseColumn'

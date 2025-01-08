@@ -1,5 +1,5 @@
 import { createEffect, on, createSignal } from 'solid-js'
-import { ElementNode, activeElement, View, Text } from '@lightningtv/solid'
+import { ElementNode, activeElement, View } from '@lightningtv/solid'
 import { LazyUp } from '@lightningtv/solid/primitives'
 import { Column, Row } from '@lightningtv/solid/primitives'
 import { Hero, TitleRow } from '../components'
@@ -11,7 +11,7 @@ import { debounce } from '@solid-primitives/scheduled'
 const TMDB = (props) => {
   const [heroContent, setHeroContent] = createSignal({})
   let contentBlock,
-    solidLogo,
+    appLogo,
     firstRun = true
 
   const delayedBackgrounds = debounce(setGlobalBackground, 800)
@@ -48,7 +48,7 @@ const TMDB = (props) => {
 
     const values2 =
       selectedIndex === 0 ? { y: 80, alpha: 1 } : { y: 0, alpha: 0 }
-    solidLogo
+      appLogo
       .animate(values2, { duration: 300, easing: 'ease-in-out' })
       .start()
   }
@@ -56,30 +56,14 @@ const TMDB = (props) => {
   return (
     <>
       <View
-        ref={solidLogo}
+        ref={appLogo}
         width={300}
         height={150}
         x={162}
         y={80}
         zIndex={105}
       >
-        <Text x={80} fontSize={28} color={0xf6f6f699}>
-          Built With:
-        </Text>
-        <View y={32} src='./assets/solidWord.png' width={280} height={52} />
-
-        <View x={0} y={110} src='./assets/tmdb.png' width={80} height={41} />
-        <Text
-          x={90}
-          y={110}
-          contain='width'
-          width={160}
-          fontSize={12}
-          color={0xf6f6f699}
-        >
-          This product uses the TMDB API but is not endorsed or certified by
-          TMDB.
-        </Text>
+        <View y={-60} src='./assets/logo.png' width={280} height={280} />
       </View>
 
       <ContentBlock

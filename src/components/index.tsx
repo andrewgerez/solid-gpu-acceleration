@@ -4,12 +4,15 @@ import {
   Text,
   type NodeProps,
   Dynamic,
+  ElementNode,
+  assertTruthy
 } from '@lightningtv/solid'
 import { Row } from '@lightningtv/solid/primitives'
 import { createSignal, Index } from 'solid-js'
 import styles, { buttonStyles } from '../styles'
 import { type Tile } from '../api/formatters/item-formatter'
 import { LazyUp } from '@lightningtv/solid/primitives'
+import { useNavigate } from '@solidjs/router'
 
 export function Thumbnail(props: IntrinsicNodeProps) {
   return <View {...props} style={styles.Thumbnail} />
@@ -53,6 +56,17 @@ const titleRowStyles = {
 }
 
 export function TitleRow(props: TileRowProps) {
+  const navigate = useNavigate()
+
+  function onEnter(this: ElementNode) {
+    let href = this.href
+
+    assertTruthy(href)
+    navigate(href)
+
+    return true
+  }
+
   return (
     <View height={props.height} forwardFocus={1} marginTop={30}>
       <Text skipFocus style={titleRowStyles}>
@@ -67,7 +81,7 @@ export function TitleRow(props: TileRowProps) {
         y={50}
       >
         {(item) => (
-          <Dynamic component={typeToComponent[props.row.type]} {...item()} />
+          <Dynamic component={typeToComponent[props.row.type]} {...item()} onEnter={onEnter} />
         )}
       </LazyUp>
     </View>

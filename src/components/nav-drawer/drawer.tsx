@@ -39,16 +39,16 @@ function NavButton(props: Readonly<NavButtonProps>) {
 export default function NavDrawer(props: any) {
   let backdrop: ElementNode | undefined
   const navigate = useNavigate()
-  function onFocus(el: ElementNode) {
+  function onFocus(this: ElementNode) {
     backdrop!.states.add('$focus')
-    el.children.forEach((c) => c.states.add('$active'))
-    el.children[el.selected ?? 0].setFocus()
+    this.children.forEach((c) => c.states.add('$active'))
+    this.children[this.selected ?? 0].setFocus()
   }
 
-  function onBlur(el: ElementNode) {
+  function onBlur(this: ElementNode) {
     backdrop!.states.remove('$focus')
-    el.selected = 0
-    el.children.forEach((c) => c.states.remove('$active'))
+    this.selected = 0
+    this.children.forEach((c) => c.states.remove('$active'))
   }
 
   function handleNavigate(page: string) {
@@ -70,7 +70,7 @@ export default function NavDrawer(props: any) {
         scroll='none'
       >
         <NavButton
-          onEnter={() => handleNavigate('/browse/all')}
+          onEnter={() => handleNavigate('/')}
           icon='home'
         >
           Home
