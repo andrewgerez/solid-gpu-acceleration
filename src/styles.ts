@@ -57,7 +57,7 @@ export default {
     zIndex: 2,
     transition: { scale: { duration: 250, easing: 'ease-in-out' } },
     border: { width: 0, color: 0x00000000 },
-    $focus: { scale: 1.1, border: { color: '#E77D22', width: 8 } },
+    $focus: { scale: 1.1, border: { color: '#E77D22', width: 2 } },
   },
   FocusRing: {
     borderRadius: 16,
