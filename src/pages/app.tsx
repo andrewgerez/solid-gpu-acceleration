@@ -7,8 +7,9 @@ import {
 import Background from '@/components/background'
 import NavDrawer from '@/components/nav-drawer/drawer'
 import { FPSCounter, setupFPS } from '@lightningtv/solid-ui'
-import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { KeyMap } from '@lightningtv/core/focusManager'
+import SplashScreen from './splash-screen/splash'
 
 declare module '@lightningtv/solid' {
   interface KeyMap {
@@ -40,17 +41,21 @@ const App = (props) => {
   const announcer = useAnnouncer()
   announcer.enabled = false
   const navigate = useNavigate()
+  const [showSplash, setShowSplash] = createSignal(true)
 
-  let navDrawer, lastFocused
+  let pageContainerRef: any
+  let fadeInRef: any
+  let navDrawerRef: any
+  let lastFocusedRef: any
 
   setupFPS({ renderer })
 
   function focusNavDrawer() {
-    if (navDrawer.states.has('focus')) {
+    if (navDrawerRef.states.has('focus')) {
       return false
     }
-    lastFocused = activeElement()
-    return navDrawer.setFocus()
+    lastFocusedRef = activeElement()
+    return navDrawerRef.setFocus()
   }
 
   const [showWidgets, setShowWidgets] = createSignal(true)
@@ -74,12 +79,12 @@ const App = (props) => {
 
   const [lastKey, setLastKey] = createSignal<string | undefined>()
   const [lastError, setLastError] = createSignal<string | undefined>()
-  const keyPressHandler = (e) => {
-    setLastKey(`Last key: ${e.key}, Code: ${e.keyCode}`)
+  const keyPressHandler = (e: KeyboardEvent) => {
+    setLastKey(`Last key: ${e.key}, Code: ${e.key}`)
   }
   document.addEventListener('keydown', keyPressHandler)
-  const displayError = (e) => {
-    setLastError((p) => (p || '') + '\n' + e.message)
+  const displayError = (e: any) => {
+    setLastError((p) => (p ?? '') + '\n' + e.message)
   }
   document.addEventListener('onerror', displayError)
   onCleanup(() => {
@@ -87,50 +92,62 @@ const App = (props) => {
     document.removeEventListener('keydown', keyPressHandler)
   })
 
-  let pageContainer
+  onMount(() => {
+    setTimeout(() => setShowSplash(false), 4000)
+    setTimeout(() => fadeInRef.animate({ alpha: 0 }, { duration: 1000 }).start(), 4500)
+  })
 
   return (
-    <View
-      ref={window.APP as any}
-      onAnnouncer={() => (announcer.enabled = !announcer.enabled)}
-      onLast={() => history.back()}
-      onMenu={() => navigate('/')}
-      style={{ width: 1920, height: 1080 }}
-      onBackspace={focusNavDrawer}
-      onLeft={focusNavDrawer}
-      onRight={() =>
-        navDrawer.states.has('focus') &&
-        (lastFocused || pageContainer).setFocus()
-      }
-    >
-      <Background />
-      <FPSCounter mountX={1} x={1910} y={10} alpha={showWidgets() ? 1 : 0.01} />
-      <View
-        mountX={1}
-        width={330}
-        height={28}
-        x={1910}
-        y={190}
-        color={0x000000ff}
-        hidden={!showWidgets()}
-      >
-        <Text fontSize={20} y={4} x={4}>
-          {lastKey()}
-        </Text>
-      </View>
+    <>
+      {showSplash() ? (
+        <SplashScreen />
+      ) : (
+        <>
+          <View ref={fadeInRef} width={1920} height={1080} zIndex={1} src='./assets/background-mask.jpg'></View>
+          <View
+            ref={window.APP as any}
+            onAnnouncer={() => (announcer.enabled = !announcer.enabled)}
+            onLast={() => history.back()}
+            onMenu={() => navigate('/')}
+            style={{ width: 1920, height: 1080 }}
+            onBackspace={focusNavDrawer}
+            onLeft={focusNavDrawer}
+            onRight={() =>
+              navDrawerRef.states.has('focus') &&
+              (lastFocusedRef || pageContainerRef).setFocus()
+            }
+          >
+            <Background />
+            <FPSCounter mountX={1} x={1910} y={10} alpha={showWidgets() ? 1 : 0.01} />
+            <View
+              mountX={1}
+              width={330}
+              height={28}
+              x={1910}
+              y={190}
+              color={0x000000ff}
+              hidden={!showWidgets()}
+            >
+              <Text fontSize={20} y={4} x={4}>
+                {lastKey()}
+              </Text>
+            </View>
 
-      <Text x={270} y={20} fontSize={24} contain='width' width={800}>
-        {lastError()}
-      </Text>
-      <View ref={pageContainer} forwardFocus={0}>
-        {props.children}
-      </View>
-      <NavDrawer
-        ref={navDrawer}
-        focusPage={() => lastFocused.setFocus()}
-        showWidgets={showWidgets()}
-      />
-    </View>
+            <Text x={270} y={20} fontSize={24} contain='width' width={800}>
+              {lastError()}
+            </Text>
+            <View ref={pageContainerRef} forwardFocus={0}>
+              {props.children}
+            </View>
+            <NavDrawer
+              ref={navDrawerRef}
+              focusPage={() => lastFocusedRef.setFocus()}
+              showWidgets={showWidgets()}
+            />
+          </View >
+        </>
+      )}
+    </>
   )
 }
 
