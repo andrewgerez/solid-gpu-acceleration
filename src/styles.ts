@@ -122,6 +122,11 @@ export default {
     transition: { y: { duration: 250, easing: 'ease-in-out' } },
     zIndex: 2,
   },
+  Header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   Rect: {
     width: 250,
     height: 100,

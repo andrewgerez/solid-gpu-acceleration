@@ -39,7 +39,7 @@ const TMDB = (props) => {
     )
   )
 
-  function onSelectedChanged(this: ElementNode, selectedIndex, column, row) {
+  function onSelectedChanged(this: ElementNode, selectedIndex) {
     const values =
       selectedIndex === 0 ? { y: 300, alpha: 1 } : { y: 200, alpha: 0 }
     contentBlock
@@ -48,7 +48,7 @@ const TMDB = (props) => {
 
     const values2 =
       selectedIndex === 0 ? { y: 80, alpha: 1 } : { y: 0, alpha: 0 }
-      appLogo
+    appLogo
       .animate(values2, { duration: 300, easing: 'ease-in-out' })
       .start()
   }
@@ -57,13 +57,13 @@ const TMDB = (props) => {
     <>
       <View
         ref={appLogo}
-        width={300}
-        height={150}
-        x={162}
-        y={80}
+        width={1920}
+        height={1}
+        y={-50}
+        style={styles.Header}
         zIndex={105}
       >
-        <View y={-60} src='./assets/logo.png' width={280} height={280} />
+        <View src='./assets/logo.png' width={280} height={260} />
       </View>
 
       <ContentBlock
